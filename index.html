@@ -25,12 +25,107 @@
 				content: attr(max);
 				padding-left: 10px;
 			}
+
+			.type-section {
+				border: 1px solid #000;
+				margin-bottom: 30px;
+				padding: 10px;
+			}
+			.type-section .title {
+				text-align: center;
+				margin-bottom: 10px;
+			}
+
+			/* CSS */
+			.wave-frame {
+				box-sizing: border-box;
+				border: 2px solid #1080d0;
+				border-radius: 50%;
+				width: 250px;
+				height: 250px;
+				margin: 0 auto;
+				padding: 5px;
+				overflow: hidden;
+				position: relative;
+			}
+			.wave-size {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				color: rgba(6, 85, 128, 0.8);
+				font-size: 32px;
+				z-index: 100;
+				mix-blend-mode: color-dodge;
+			}
+			.wave {
+				/*background-color: #1080d0;*/
+				height: 100%;
+				border-radius: 50%;
+				position: relative;
+				overflow: hidden;
+			}
+			#wave-mask {
+				background-color: #1080d0;
+				height: 250%;
+				width: 250%;
+				display: block;
+				border-radius: 45%;
+				animation: spin 10s linear infinite;
+				position: absolute;
+				left: 50%;
+				top: 0;
+				transform: translateX(-50%);
+			}
+			.wave-mask-container {
+				left: 0;
+				top: 0;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+			}
+			@keyframes spin {
+				from {
+					transform: translateX(-50%) rotate(0deg);
+				}
+				to {
+					transform: translateX(-50%) rotate(360deg);
+				}
+			}
 		</style>
 	</head>
 	<body>
-		<canvas id="c"></canvas>
 		<input type="range" id="r" min="0" max="100" step="1">
+		<div class="type-section">
+			<div class="title">Canvas</div>
+			<canvas id="c"></canvas>
+		</div>
+		<div class="type-section">
+			<div class="title">Css</div>
+			<div class="wave-frame">
+				<div class="wave" id="wave">
+					<div class="wave-size"><span id="number">0</span>%</div>
+					<div class="wave-mask-container" id="wave-mask-container">
+						<div class="wave-mask" id="wave-mask"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 
+		<script>
+			// css
+			// var baseVal = 150;
+			var baseVal = 0;
+			var dom = document.getElementById('wave-mask-container');
+			var numDom = document.getElementById('number');
+			function cssRender() {
+				var val = document.getElementById('r').value;
+				dom.style.marginTop = (100 - ~~val) + '%'
+				numDom.innerText = val;
+				requestAnimationFrame(cssRender)
+			}
+			cssRender();
+		</script>
 		<script type="text/javascript">
 			var canvas = document.getElementById('c');
 			var ctx = canvas.getContext('2d');
@@ -53,7 +148,7 @@
 			var sX = 0;
 			var sY = mH / 2;
 			var axisLength = mW; //轴长
-			var waveWidth = 0.015; //波浪宽度,数越小越宽 
+			var waveWidth = 0.015; //波浪宽度,数越小越宽
 			var waveHeight = 6; //波浪高度,数越大越高
 			var speed = 0.09; //波浪速度，数越大速度越快
 			var xOffset = 0; //波浪x偏移量
